@@ -6,6 +6,11 @@
 volatile unsigned long pulses = 0; //counter
 int pulsePin = 2; // D2 pulse pin IRQ0 
 
+int Htime; //High state time
+int Ltime; //Low state time
+float Ttime; //
+float frequency; //
+
 /*******Ethernet W5500*******/
 #define WIZ_CS 11
 byte mac[] = { 0x00, 0x00, 0x00, 0x00, 0x00, 0x00 }; //MAC
@@ -29,9 +34,15 @@ void tic(){
   pulses++; //Counter of pulses
 }
 
+void tic_count(){
+  Htime = pulseIn(pulsePin, HIGH);
+  Ltime = pulseIn(pulsePin, LOW);
+  Ttime = Htime + Ltime;
+  frequency = 1000000/Ttime;  
+}
+
 void setup() {
   // put your setup code here, to run once:
-  
   pinMode(pulsePin, INPUT);
   attachInterrupt(0, tic, RISING); //interupt edge rising on D2
 
@@ -53,6 +64,6 @@ void setup() {
   root = SD.open("/");
 }
 
-void loop(){
+void loop() {
 
 }
